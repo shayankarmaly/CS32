@@ -1,0 +1,141 @@
+Shayan Karmaly
+Professor Nachenberg
+CS32 
+27 February 2020
+
+
+														Homework 4
+
+2. The call to the one-argument form of Sequence <Coord> :: insert causes at least one compilation error because there is no explicit '<' operator overload function. There is no compilation error for the call to the one with one argument because the object gets inserted with a value <= to the item at that position. Then, it'll check every value in the loop to find the desired place to put the object therefore not causing a compilation error. 
+
+
+4b. This problem could not be solved given the constraints in part a if we had only a one-parameter 'listAll' and had to implement it as the recursive function is because in order to be used as a recursive function, we cannot initialize a variable within each recursive call otherwise, it will reset after each time it's called. Additionally, we would not be able to order the '.' in the address and print the whole address correctly unlike in the listAll function that takes two parameters. 
+
+
+5a. 
+
+const int N = some value; ----->0(1)
+	double dist[N][N]; ----->0(1)
+	... 
+	int bestMidPoint[N][N]; ----->0(1)
+	for (int i = 0; i < N; i++) ----->0(N)
+	{
+	    bestMidPoint[i][i] = -1;  // one-stop trip to self is silly -----> 0(1)
+	    for (int j = 0; j < N; j++) -----> 0(N)
+	    {
+	        if (i == j)-----> 0(1)
+	            continue;-----> 0(1)
+	        int minDist = maximum possible integer; -----> 0(1)
+	        for (int k = 0; k < N; k++)-----> 0(N)
+	        {
+	            if (k == i  ||  k == j)-----> 0(1)
+	                continue; -----> 0(1)
+	            int d = dist[i][k] + dist[k][j];-----> 0(1)
+	            if (d < minDist)-----> 0(1)
+	            {
+	                minDist = d;-----> 0(1)
+	                bestMidPoint[i][j] = k;-----> 0(1)
+	            }
+	        }
+	    }
+	}
+
+	0(N^3) : Worst case this will run all for loops to run N times. 
+
+5b. 
+
+const int N = some value; ----->0(1)
+	double dist[N][N];----->0(1)
+	...
+	int bestMidPoint[N][N];----->0(1)
+	for (int i = 0; i < N; i++)----->0(N)
+	{
+	    bestMidPoint[i][i] = -1;  // one-stop trip to self is silly ----->0(1)
+	    for (int j = 0; j < i; j++)  // loop limit is now i, not N ----->0(N)
+	    {
+	        int minDist = maximum possible integer; ----->0(1)
+	        for (int k = 0; k < N; k++) 
+	        {
+	            if (k == i  ||  k == j) ----->0(1)
+	                continue;
+	            int d = dist[i][k] + dist[k][j]; ----->0(1)
+	            if (d < minDist) ----->0(1)
+	            {
+	                minDist = d;
+	                bestMidPoint[i][j] = k; ----->0(1)
+	                bestMidPoint[j][i] = k; ----->0(1)
+	            }
+	        }
+	    }
+	}
+
+	0(N^3) : worst case this will run all for loops N times. Even if the second for loop only goes to 'i', its max value is N so the time complexity doesn't change. 
+
+6a. 
+
+void interleave(const Sequence& seq1, const Sequence& seq2, Sequence& result)
+{
+    Sequence res; ----->0(1)
+
+
+    int n1 = seq1.size(); ----->0(1)
+    int n2 = seq2.size(); ----->0(1)
+    int nmin = (n1 < n2 ? n1 : n2);----->0(1)
+    int resultPos = 0;----->0(1)
+    for (int k = 0; k < nmin; k++)----->0(N)
+    {
+        ItemType v;----->0(1)
+        seq1.get(k, v);----->0(N/2)
+        res.insert(resultPos, v);----->0(N/2)
+        resultPos++;----->0(1)
+        seq2.get(k, v);----->0(N/2)
+        res.insert(resultPos, v);----->0(N/2)
+        resultPos++; ----->0(1)
+    }
+
+    const Sequence& s = (n1 > nmin ? seq1 : seq2);----->0(N)
+    int n = (n1 > nmin ? n1 : n2);----->0(1)
+    for (int k = nmin ; k < n; k++)----->0(N)
+    {
+        ItemType v;----->0(1)
+        s.get(k, v);----->0(N/2)
+        res.insert(resultPos, v);----->0(N/2)
+        resultPos++;----->0(1)
+    }
+
+    result.swap(res);----->0(1)
+}
+
+2N^2 + N^2 + N = 3N^2 + N gives us the final answer : 0(N^2)
+
+Ignoring the coefficients, we get 2N^2 because both the insert and get function have a time complexity of N/2 as well as two for loops that loop N times. After adding the N values inside of them and multiplying by the loop's time complexity of N, the time complexities of the for loops and the copy constructor are added, the coefficient is removing and takes N to the highest power.  
+
+
+6b.
+
+
+
+void Sequence::interleave(const Sequence& seq1, const Sequence& seq2)
+{
+    Sequence res; ----->0(1)
+
+    Node* p1 = seq1.m_head->m_next; ----->0(1)
+    Node* p2 = seq2.m_head->m_next; ----->0(1)
+    for ( ; p1 != seq1.m_head  &&  p2 != seq2.m_head; p1 = p1->m_next, p2 = p2->m_next)----->0(N)
+    {
+        res.insertBefore(res.m_head, p1->m_value); ----->0(1)
+        res.insertBefore(res.m_head, p2->m_value); ----->0(1)
+    }
+
+    Node* p    = (p1 != seq1.m_head ? p1 : p2); ----->0(1)
+    Node* pend = (p1 != seq1.m_head ? seq1 : seq2).m_head; ----->0(1)
+    for ( ; p != pend; p = p->m_next) ----->0(N)
+        res.insertBefore(res.m_head, p->value); ----->0(1)
+      // Swap *this with res
+    swap(res); ----->0(1)
+      // Old value of *this (now in res) is destroyed when function returns.
+}
+
+2N gives us the answer : 0(N)
+
+The two for loops run N times therefore the time complexity for both is 2N. After dropping the coefficient, the time complexity is just N. 
