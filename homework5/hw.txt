@@ -1,0 +1,118 @@
+Shayan Karmaly
+Professor Nachenberg
+CS32
+10 March 2021
+
+
+																	Homework #5
+
+1a)
+                                50
+
+                         20            60
+
+                   10        40            70
+
+                     15     30		65	80
+
+			   25   32	      78
+
+
+1b) 
+In-order: 10, 15, 20, 25, 30, 32, 40, 50, 60, 65, 70, 78, 80
+
+Pre-order: 50, 20, 10, 15, 40, 30, 25, 32, 60, 70, 65, 80, 78
+
+Post-order: 15, 10, 25, 32, 30, 40, 20, 65, 78, 80, 70, 60, 50
+
+1c)
+
+				50
+
+                         15            60
+
+                   10        40            70
+
+                          25		65	80
+
+			        32	      78
+
+
+
+
+2a)
+Struct Node
+{
+	Node(int value, Node* parent)
+	{
+		m_value = value;
+		m_ptr = parent;
+		right = nullptr;
+		left = nullptr;
+	}
+	int m_value;
+	Node* m_ptr;
+	Node* right;
+	Node* left;
+};
+
+
+
+2b)
+	void insertBst(int value, Node* parent, Node* curr)
+	{
+		If the current node is nullptr do the following:
+		make a temp node and set its value using the given value. 
+		set the given parent node into its parent node. 
+		set it's left and right nodes to nullptr.
+		return from this if statement. 
+	
+
+		If its value is less than the value at the current node do the following:
+		call the function recursively and call insertBst(value, current -> left, current)
+
+
+		else
+			insertBst(value, current -> right, current)
+	}
+			
+3a)
+
+			7
+		
+		4		6
+
+	    0	    2	      5
+
+
+3b)
+(7, 4, 6, 0, 2, 5)
+
+3c) 
+(6, 4, 5, 0, 2)
+
+
+
+4a)
+O(C+S)
+
+4b)
+O(logC+S)
+
+4c)
+O(log(CS))
+
+4d)
+O(logS)
+
+4e)
+O(1)
+
+4f)
+O(logC+S)
+
+4g)
+O(S)
+
+4h)
+O(ClogS)
