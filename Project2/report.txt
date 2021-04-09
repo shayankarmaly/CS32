@@ -1,0 +1,334 @@
+Shayan Karmaly
+Professor Nachenberg
+CS32 
+24 January 2020
+
+
+														Project 2 Report
+
+
+	My doubly linked list first consists of having a head pointer which points to the first element in the list as well as a tail pointer which points to the last element in the list. additionally, each element has a next and previous pointer that allows you to go through the list and go back and forth whenever desired. 
+
+Sequence::~Sequence()
+	
+	Set m_size to 0 and head and tail to nullptr if condition is met that it's empty
+	if not, iterate through starting from head until it reaches nullptr deleting using a temp pointer to each value in the list
+
+Sequence& Sequence :: operator = (const Sequence &src)
+
+	check if src is the same list as this, if it is return this
+	else create a temp of Sequence type using the copy constructor
+	swap values and return this
+
+Sequence::Sequence(const Sequence& other)
+	
+	check if src is nullptr and if it is initialize m_size to 0 and head and tail to nullptr
+	else set head and tail to nullptr and m_size to 0 for this
+	after, iterate through until src's m_size and copy values from src and copy it into this
+
+int Sequence::insert(int pos, const ItemType& value)
+
+	return -1 if pos is less than 0 or if pos is greater than m_size
+	if the head is nullptr and pos is 0  then create a new node and set its head and tail to equal to equal this new node. Set its next and previous to nullptr. 
+	if pos and size are the same value, create a new node and assign its previous to tail and its next to nullptr and tail equal to that. 
+	then check if head is not nullptr and pos is equal to 0, then create a new node to be at the beginning of the list. Then set its previous to nullptr and next to the previous head.
+	then check if head is not nullptr and pos is not 0, then create a new node and insert in the list breaking the next's and previous's surrounding nodes
+
+int Sequence::insert(const ItemType&)
+
+	check if it's empty and if it is use insert to set position to 0.
+	check if value is less than or equal the pointer's 'keep' variable using a temp pointer that iterates through the linked list
+	once the position is found, insert there and return the position 
+
+int Sequence::find(const ItemType& value) const
+
+	if it's empty, return -1
+	iterate through a loop until either the pointer is a nullptr or temp ptr's keep is equal to value
+	increment the current position and check if it's equal to size. 
+	if it is return -1 else return the position.
+
+void Sequence:: swap(Sequence& src)
+
+	make a temp int and temp head and tail pointer.
+	set temp to head, set this head equal to src's head and set temp's head into src's head. 
+	set a temp to tail, set this tail equal to src's tail, and temp's tail to src's tail. 
+	set this's size equal to src's size 
+
+Bool Sequence::erase(int pos)
+
+	check if pos is greater than or equal to size or it is less than zero or if head or tail is nullptr or if size is 0 and if any of these conditions are satisfied, return 0
+	if a head node is being deleted of size with a value of 1, then set is head and tail to nullptr and set size to 0. 
+	then decrement the size and return
+	if the tail is being deleted, then the second to last's next will be assigned nullptr and tail will be pointed to it. Then delete the old tail with a pointer. Next, decrement size and return
+	iterate to the position with a temp pointer if something is being deleted in the middle
+	make the value that comes after it point to the value that comes before the pointer and also do the other way around. After, delete the pointer. 
+	decrement size
+	return
+
+int Sequence::remove(const ItemType& value)
+
+	iterate through a while loop until find(value) until it can't find the value in the list. 
+	use erase to erase at that value that was returned from the find function
+	increment the variable keeping count
+	return the variable keeping count 
+
+void interleave(const Sequence& seq1, const Sequence& seq2, Sequence& result)
+
+	check if seq1 is empty, if it is then return seq2
+	do the same thing for seq2, if it's empty return seq1
+	create a counter to hold the size of seq1 + seq2
+	iterate through a loop until it's bigger than size and check if:
+	seq1.get at a given index returns a value. Then insert into a variable of type Sequence at a position value. Increment the position value. 
+	do the same thing for seq2. 
+	use the assignment operator to assign result = tempo
+
+
+	Test Cases:
+
+The following test was code used from the project spec that was said to have been defined as material beyond the scope of CS32. Overall purpose was to see if my project would run correctly with no errors. Below is the code from the Project 2 spec I used:
+
+#include "Sequence.h"
+	#include <type_traits>
+
+	#define CHECKTYPE(c, f, r, a)  \
+		{  \
+		 static_assert(std::is_same<decltype(&c::f), r (c::*)a>::value, \
+		     "You did not declare " #c "::" #f " as the spec does");  \
+		 r (c::*p) a = &c::f;  \
+		 (void) p;  \
+		}
+	#define CHECKTYPENONMEMBER(f, r, a)  \
+		{  \
+		 static_assert(std::is_same<decltype(&f), r (*)a>::value, \
+		     "You did not declare " #f " as the spec does");  \
+		 r (*p) a = f;  \
+		 (void) p;  \
+		}
+
+	static_assert(std::is_default_constructible<Sequence>::value,
+		"Sequence must be default-constructible.");
+	static_assert(std::is_copy_constructible<Sequence>::value,
+		"Sequence must be copy-constructible.");
+	static_assert(std::is_copy_assignable<Sequence>::value,
+		"Sequence must be assignable.");
+
+	void thisFunctionWillNeverBeCalled()
+	{
+	    CHECKTYPE(Sequence, empty, bool, () const);
+	    CHECKTYPE(Sequence, size, int, () const);
+	    CHECKTYPE(Sequence, erase, bool, (int));
+	    CHECKTYPE(Sequence, remove, int, (const ItemType&));
+	    CHECKTYPE(Sequence, get, bool, (int, ItemType&) const);
+	    CHECKTYPE(Sequence, set, bool, (int, const ItemType&));
+	    CHECKTYPE(Sequence, find, int, (const ItemType&) const);
+	    CHECKTYPE(Sequence, swap, void, (Sequence&));
+	    CHECKTYPENONMEMBER(subsequence, int, (const Sequence&, const Sequence&));
+	    CHECKTYPENONMEMBER(interleave, void, (const Sequence&, const Sequence&, Sequence&));
+	    { auto p = static_cast<int (Sequence::*)(int, const ItemType&)>(&Sequence::insert); (void) p; }
+	    { auto p = static_cast<int (Sequence::*)(const ItemType&)>(&Sequence::insert); (void) p; }
+	}
+
+	int main()
+	{}
+
+
+The following test case was also taken from the project2 spec which I used to determine if my program would run correctly and pass all tests: 
+
+Using unsigned long as the alias for ItemType. 
+
+
+#include "Sequence.h"
+	#include <iostream>
+	#include <cassert>
+	using namespace std;
+
+	void test()
+	{
+	    Sequence s;
+	    assert(s.insert(0, 10) == 0);
+	    assert(s.insert(0, 20) == 0);
+	    assert(s.size() == 2);
+	    ItemType x = 999;
+	    assert(s.get(0, x)  &&  x == 20);
+	    assert(s.get(1, x)  &&  x == 10);
+	}
+
+	int main()
+	{
+	    test();
+	    cout << "Passed all tests" << endl;
+	}
+
+
+The following test case was also taken from the project2 spec which I used to determine if my program would run correctly and pass all tests: 
+#include "Sequence.h"
+	#include <string>
+	#include <iostream>
+	#include <cassert>
+	using namespace std;
+
+	void test()
+	{
+	    Sequence s;
+	    assert(s.insert(0, "lavash") == 0);
+	    assert(s.insert(0, "tortilla") == 0);
+	    assert(s.size() == 2);
+	    ItemType x = "injera";
+	    assert(s.get(0, x)  &&  x == "tortilla");
+	    assert(s.get(1, x)  &&  x == "lavash");
+	}
+
+	int main()
+	{
+	    test();
+	    cout << "Passed all tests" << endl;
+	}
+
+The following test cases were used to test the all functions in the Sequence class as well as the two new algorithmic functions: 
+
+Additionally, the Itemtype was an alias for int in this example
+
+#include <cassert>
+int main()
+{
+
+    Sequence test; // creating an instance of the Sequence class to test the default constructor and use for the rest of the main function
+
+    assert(test.empty() == 1); // check if empty
+
+    assert(test.insert(-1, 1913790) == -1); // testing the insert function using two int conditions 
+
+    assert(test.size() == 0);// testing the size function
+    assert(test.insert(1 , 5678390) == -1);
+    assert(test.size() == 0);
+    assert(test.empty() == 1);
+
+    assert(test.insert(0 , 1) == 0); // testing more insert cases
+    assert(test.insert(1 , 2) == 1);
+    assert(test.insert(2 , 3) == 2);
+    assert(test.insert(3 , 4) == 3);
+    assert(test.insert(4 , 5) == 4);
+    assert(test.insert(5 , 6) == 5);
+    assert(test.insert(6 , 7) == 6);
+    assert(test.size() == 7);
+
+    test.insert(3 , 420);
+    assert(test.size() == 8);
+
+    assert(test.insert(8, 555)==8);
+    assert(test.size() == 9);
+
+
+    ItemType me = 500; // creating a type of ItemType to use in the function
+    assert(test.get(-1, x) == 0);// testing the get function 
+    assert(me == 500);
+    assert(test.get(0, me) == 1);
+    assert(me == 1);
+    assert(test.get(1, me) == 1);
+    assert(me == 2);
+    assert(test.get(3, me) == 1);
+    assert(me == 420);
+    assert(test.get(8, me) == 1);
+    assert(me == 555);
+    assert(test.get(9, me) == 0);
+    assert(me == 555);
+
+    assert(test.empty() == 0);
+
+
+    Sequence test2(test); // making a copy constructor
+
+    Sequence test3;
+    assert(test3.empty() == 1);
+
+    test3 = test; // checking if the operator will overload
+    Sequence test4;
+    assert(test4.empty() == 1);
+    test2 = test4;
+    test3 = test4;
+    assert(test3.empty() == 1);
+    assert(test2.empty() == 1);
+
+    test2.insert( 1, 1);
+    test2.insert( 0, 1);
+    test2.insert( 1, 3);
+    test.insert( 1, 2);
+
+    me = 500;
+    assert(test2.get(-1,me) == 0 && me == 500);
+    assert(test2.get(4,me) == 0 && me == 500);
+
+    assert(test2.get(0,me) == 1 && me == 1);
+    assert(test2.get(1,me) == 1 && me == 2);
+    assert(test2.get(2,me) == 1 && me == 3);
+    assert(test2.get(3,me) == 0 && me == 3);
+
+assert(test2.size() == 3);
+    assert(test2.empty() == 0 && test3.empty() == 1 && test4.empty() == 1);
+
+    test3.insert(0, 10);
+    test3.insert(1, 20);
+    assert(test3.size() == 2 && test3.empty() == 0);
+
+
+    b.swap(c); //testing the swap function 
+    me = 100;
+    assert(test3.get(-1, me) == 0 && me == 100);
+    assert(test3.get(3, me) == 0 && me == 100);
+    assert(test3.get(0, me) == 1 && me == 1);
+    assert(test3.get(1, me) == 1 && me == 2);
+    assert(test3.get(2, me) == 1 && me == 3);
+    me = 100;
+    assert(test2.get(-1, me) == 0 && me == 100);
+    assert(test2.get(2, me) == 0 && me == 100);
+    assert(test2.get(0, me) == 1 && me == 10);
+    assert(test2.get(1, me) == 1 && me == 20);
+
+
+
+    assert(test.set(-1 , 10) == 0); // testing the set function 
+    assert(test.set(9  , 10) == 0);
+    assert(test.set(0  , 10) == 1);
+    assert(test.set(8  , 111) == 1);
+    me = 100;
+    assert(test.get(0, me) == 1 && me == 10);
+    assert(test.get(1, me) == 1 && me == 2);
+    assert(test.get(7, me) == 1 && me == 7);
+    assert(test.get(8, me) == 1 && me == 111);
+    test.set( 0 , 10);
+    test.set( 1 , 20);
+    test.set( 2 , 30);
+    test.set( 3 , 40);
+    test.set( 4 , 50);
+    test.set( 5 , 60);
+    test.set( 6 , 70);
+    test.set( 7 , 80);
+    test.set( 8 , 90);
+
+    assert(test.erase(-1) == 0); // testing the erase function 
+    assert(test.erase(9) == 0);
+    assert(test.size() == 9);
+
+
+    assert(test.remove(8) == 2); // testing the remove function 
+    assert(test.get(0, me) == 1 && me == 4);
+    assert(test.get(1, me) == 1 && me == 9);
+    assert(test.get(2, me) == 1 && me == 10);
+    assert(test.size() == 3);
+    assert(test.empty() == 0);
+
+    test.erase(0);
+    test.erase(0);
+    test.erase(0);
+
+    test.insert(22);
+    test.insert(22);
+    test.insert(22);
+    test.insert(22);
+    assert(test.remove(10) == 0);
+    assert(test.remove(22) == 4);
+    assert(test.remove(22) == 0);
+    assert(test.size() == 0 && test.empty() == 1);
+
+    Return 0;
+}
