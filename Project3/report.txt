@@ -1,0 +1,484 @@
+Shayan Karmaly
+Professor Nachenberg
+CS32
+25th February 2021
+
+
+																Project 3 Report
+
+
+	class Actor: 
+		Actor(StudentWorld* sw, int imageID, double x, double y, double size, int dir, int depth);
+		- constructor takes a StudentWorld pointer, an int imageID to specify the image, a double x and double y for its coordinates, its size, direction, and depth. 
+
+		virtual void doSomething() = 0;
+
+		- declared as a pure virtual function because each actor does something different, therefore its up to the derived classes to implement this function. 
+
+		bool isDead() const;
+
+		- returns true if the actor is dead, and false otherwise
+
+		void setDead() ;
+
+		- if called, it sets the desired actor as 'dead'
+
+		StudentWorld* world() const;
+
+		- returns a StudentWorld pointer to access public member functions from the StudentWorld class
+
+		void setVerticalSpeed(double speed);
+
+		- sets the vertical speed of an actor to the speed passed in.
+
+		void setHorizontalSpeed(double speed);
+
+		- sets the horizontal speed of an actor to the speed passed in.
+
+		double getHorizontalSpeed() const;
+
+		-returns the horizontal speed of the actor 
+
+		double getVerticalSpeed() const;
+
+		-returns the horizontal speed of the actor 
+
+		virtual bool beSprayedIfAppropriate();
+
+		-inflicts damage on the actor if its affected by holy water projectiles and returns true, else it returns false
+
+		virtual bool isCollisionAvoidanceWorthy() const;
+
+		-returns true when called; used to determine zombie cab placement and speed.
+
+		virtual bool isDamageable();
+
+		- returns true if the actor is affected by holy water projectiles; used to categorize actors who are able to be damaged and those that are not. 
+
+		virtual void damageActor(int damage);
+
+		- inflicts damage on an actor based on the amount passed in. 
+ 
+    
+        	virtual void setScore(int score);
+		
+		- sets the score for the actor
+
+    
+        	virtual int getScore() const;
+
+		- returns the score
+    
+        	GraphObject* getGme() const;
+
+		- GraphObject pointer used to access public member functions in the GraphObject class
+
+
+	class Agent :
+		
+		Agent(StudentWorld* sw, int imageID, double x, double y, double size, int dir, int hp);
+		- constructor that takes a StudentWorld pointer, an int imageID to specify the image, a double x and double y for its coordinates, its size, direction, and hit points. 
+
+        	virtual int getHP() const;
+		- returns hit points
+
+        	virtual void getHP(int hp);
+		- returns hit points + the passed in hit points
+
+        	virtual bool takeDamageAndPossiblyDie(int hp);
+		- subtracts the passed in hit points from the desired agent's hit points. If the agent dies, return true. Else, return false
+
+       		virtual int soundWhenHurt();
+		- returns 0 because it was giving me an error if I left it as a pure virtual and didn't define in every derived class. 
+
+        	virtual int soundWhenDie();
+		- returns 0 because it was giving me an error if I left it as a pure virtual and didn't define in every derived class. 
+        
+    
+        	Actor* getAct();
+    		- Actor pointer used to access public member functions in the Actor class
+
+    
+        	virtual void setHP(int hp);
+		- updates hit points and assigns the passed in hit points to it
+
+
+	class BorderLine : 
+
+		BorderLine(StudentWorld* sw, double x, double y, bool isYellow);
+		- constructor that takes a StudentWorld pointer, coordinates through double x and double y, and a bool isYellow to determine whether the borderLine being constructed is Yellow or White. Sets horizontal speed to 0, vertical speed to -4, and establishes that it's alive. 	
+	
+        	virtual void doSomething();
+		- derived class defining doSomething here because each class does something different than the other. 
+
+
+
+	class GhostRacer :
+
+		GhostRacer(StudentWorld* sw, double x, double y);
+		
+		- constructor that sets hit points to 100, vertical speed to 0, establishes that it's collision avoidance worthy, is alive, is damageable, and has max holy water sprays. 
+
+        	virtual void doSomething()
+
+		- derived class doing something when its called every tick.  
+		if GhostRacer is dead, return. 
+
+		if the left boundary is less than 5, and if the direction is less than 90, add 10 to GhostRacers HP, set its direction to 82 degrees, and play the vehicle crash sound. 
+		
+		if the right side boundary is greater than 5 and its direction is less than 90 degrees, add 10 to its HP, set its direction to 98 degrees and play the vehicle crash sound. 
+
+
+       		 virtual int soundWhenDie() const;
+
+		- play the sound when GhostRacer dies 
+
+
+        	int getNumSprays() const;
+
+		- return the number of holy water projectiles left
+
+
+        	void increaseSprays(int amt);
+	
+		- increase the number of sprays by adding amt to it. 
+
+
+        	void spin();
+		
+		- Spin as a result of hitting an oil slick.
+
+
+        	virtual void setHolyWaterSprays(int sprays);
+    		
+		- initialize holyWaterSprays with sprays. 
+
+       
+   	 	void moveHere(int deg);
+	
+		- movement for GhostRacer
+
+		takes in an integer deg and if that is greater than or equal to 360, subtract it from 360. 
+		get the degree in radians and use GraphObject's moveTo function. 
+
+		subtract the angle from 180. If it's less than 0, add 360 to it and set the direction to that number. 
+    
+
+	class Pedestrian :
+	
+		Pedestrian(StudentWorld* sw, int imageID, double x, double y, double size);
+
+		- constructor that sets the horizontal speed to 0, establishes that a pedestrian is alive, is a collision avoidance worthy, sets the vertical speed to -4, and sets the hit points to 2. 
+
+
+    		virtual int soundWhenHurt() const;
+		
+		- plays the sound when a pedestrian gets hurt
+
+
+    		virtual int soundWhenDie() const;
+		
+		- plays the sound when a pedestrian dies
+ 
+
+      // Move the pedestrian.  If the pedestrian doesn't go off screen and
+      // should pick a new movement plan, pick a new plan.
+    		void moveAndPossiblyPickPlan();
+
+		- supposed to move the pedestrian, and pick a new movement plan if it doesn't go off the screen. was unable to implement this.
+
+
+	class HumanPedestrian :
+
+		HumanPedestrian(StudentWorld* sw, double x, double y);
+
+		- constructor that establishes that it's alive, is collision avoidance worthy, sets its horizontal speed to 0, its vertical speed to -4, and its hit points to 2. 
+
+
+   		 virtual void doSomething();
+
+		- if its dead, return
+
+		checks if the human pedestrian overlaps a ghost racer.
+
+		if it does, decrease the ghost racers lives and the level ends. 
+
+		access the moveTo function and pass in new coordinates.
+
+		
+    		virtual bool beSprayedIfAppropriate();
+
+		
+		- checks if its a damageable actor and if so, calculates a new horizontal speed. 
+
+		if its direction is equal to 0, set it to 180, else set its direction to 0 and play the sound where pedestrian gets hurt. 
+
+    		virtual bool takeDamageAndPossiblyDie(int hp);
+
+		- checks if hp - the pedestrians hp is less than 0. If it is, return true, else return false
+
+
+
+	class ZombiePedestrian :
+
+		ZombiePedestrian(StudentWorld* sw, double x, double y);
+
+		- constructor that sets its horizontal speed to 0, its vertical speed to -4, its hp to 2, and establishes it as collision avoidance worthy, as damageable, and as alive. 
+
+    		virtual void doSomething();
+
+		- if its dead, return.
+
+		checks if ghost racer overlaps with a zombie pedestrian. If so, the zombie takes 2 hp of damage and ghost racer takes 5. return. 
+
+		- was unable to implement check if zombie pedestrians x coordinate is within 30 pixels of ghost racers x coordinate and so on... 
+
+
+    		virtual bool beSprayedIfAppropriate();
+
+		- checks to make sure its able to be damaged by a holy water spray. If so, decrement its hp. if its new hp is less than or equal to 0, set its Status to dead and play the die sound. 
+
+		else, play the hurt sound. 
+
+		was unable to add a healing goodie randomly and give points to GhostRacer  if they were overlapping. 
+
+
+
+	class ZombieCab :
+		
+		ZombieCab(StudentWorld* sw, double x, double y);
+	
+		- constructor establishes its alive, is collision avoidance worthy, and has a horizontal speed of 0
+
+        	virtual void doSomething();
+
+		- if its dead, return. 
+
+		else if ghost racer overlaps with zombie cab, if damage count is greater than 0, move somewhere else. 
+
+		else play sound of vehicle crashing and ghost racer and zombie cab get damage done to them. 
+
+		add to damage count because if its already damaged ghost racer once, it cannot again. 
+
+		call the moveTo function to move zombie cab to a new pair of coordinates. 
+
+		- was unable to check if the cab is moving up the screen and implement 5-8 for zombie cab. 
+
+
+        virtual bool beSprayedIfAppropriate();
+
+		- first checks if it can be sprayed by a holy water spray.
+
+		if so, decrement zombie cab's hp accordingly by 1. if after doing this, zombie cab is dead, play the die sound. 
+
+		if zombie cab is overlapping with this worlds ghost racer, there is a 1 in 5 chance an oil slick will appear at that spot. Add 200 points to the players score. 
+
+
+	class Spray:
+
+	 	Spray(StudentWorld* sw, double x, double y, int dir);
+
+		- constructor sets it to alive. 
+
+		
+    		virtual void doSomething();
+
+		- if its dead, return immediately. 
+
+		check if spray is overlapping an actor. If it is, damage that actor and set spray to dead. 
+
+		else, move forward. 
+
+
+	class GhostRacerActivatedObject : 
+    
+
+		GhostRacerActivatedObject(StudentWorld* sw, int imageID, double x, double y, double size, int dir);
+
+		- constructor; doesn't initialize anything. 
+
+
+    		virtual bool beSprayedIfAppropriate();
+
+		- if its damageable by a holy water spray, damage the object by 1 and return true; 
+
+
+    		virtual void doActivity(GhostRacer* gr) = 0;
+
+		- pure virtual class because each GhostRacerActivatedObject does something different. 
+
+
+       		 virtual int getScoreIncrease() const = 0;
+
+		- pure virtual class because each GhostRacerActivatedObject does something different. 
+
+
+      	
+    		virtual int getSound() const;
+
+		- wasn't really sure what kind of sound to call, so I called the 'none' sound and returned 0. 
+
+     
+    		virtual bool selfDestructs() const = 0;
+
+
+		- pure virtual class because each GhostRacerActivatedObject does something different. 
+
+    
+   		virtual bool isSprayable() const = 0;
+
+		- pure virtual class because each GhostRacerActivatedObject does something different. 
+
+
+
+
+	class OilSlick : 
+
+		OilSlick(StudentWorld* sw, double x, double y);
+
+		- constructor that sets its horizontal speed to 0 and vertical speed to -4. 
+
+
+    		virtual void doSomething();
+
+		- if its overlapping with this worlds ghost racer, play the oil slick sound, make the ghost racer spin, and move the oil slick to a new spot using the algorithm. 
+
+		- if it goes out of bounds, set it to dead and return. 
+
+
+    		virtual void doActivity(GhostRacer* gr);
+
+		- plays the oil slick sound and makes ghost racer spin. 
+
+
+    		virtual int getScoreIncrease() const;
+
+		- returns the score
+
+
+    		virtual int getSound() const;
+
+		- plays the correct sound for an oil slick
+
+
+    		virtual bool selfDestructs() const;
+
+		- set it to return false because I was unsure and from what I understand, an oil slick can be reformed throughout the game so its not completely dead after being activated. 
+
+	
+    		virtual bool isSprayable() const;
+
+		- returns false because its not affected by holy water sprays. 
+
+
+
+	class HealingGoodie : 
+
+		HealingGoodie(StudentWorld* sw, double x, double y);
+
+		- constructor that sets its horizontal speed to 0 and vertical speed to -4. 
+
+
+    		virtual void doSomething();
+
+		- if its overlapping with this worlds ghost racer, play the got goodie sound, make the add 250 points to ghost racers score and set the goodie to not alive.  Check its boundaries to see if its out of bounds, if so set it to not alive. 
+
+    		virtual void doActivity(GhostRacer* gr);
+
+
+		- plays the got goodie sound, adds hit points and score to ghost racer. 
+
+
+    		virtual int getScoreIncrease() const;
+
+		- returns the score
+
+
+    		virtual bool selfDestructs() const;
+
+		- returns true because it is set to not alive after being activated 
+
+
+
+    		virtual bool isSprayable() const;
+
+		- returns true because can be affected by a holy water spray 
+
+
+
+	class HolyWaterGoodie : 
+
+
+		HolyWaterGoodie(StudentWorld* sw, double x, double y);
+
+		- that sets its horizontal speed to 0 and vertical speed to -4. 
+
+
+    		virtual void doSomething();
+
+		- if its overlapping with this worlds ghost racer, play the got goodie sound, make the add 50 points to ghost racers score and set the goodie to not alive.  Check its boundaries to see if its out of bounds, if so set it to not alive. 
+
+    		virtual void doActivity(GhostRacer* gr);
+
+		- plays the got goodie sound, adds score to ghost racer, and adds holy water sprays to it as well. 
+
+   		virtual int getScoreIncrease() const;
+
+		- returns the score
+
+
+    		virtual bool selfDestructs() const;
+
+		- returns true because it is set to not alive after being activated. 
+
+
+    		virtual bool isSprayable() const;
+
+		- returns true because it can be damaged by a holy water spray. 
+
+
+
+
+	class SoulGoodie : 
+
+		SoulGoodie(StudentWorld* sw, double x, double y);
+
+		- that sets its horizontal speed to 0 and vertical speed to -4. 
+
+
+    		virtual void doSomething();
+
+		- if its overlapping with this worlds ghost racer, play the got soul sound, make the add 100 points to ghost racers score and set the goodie to not alive. 
+
+		Also, rotate soul goodies degrees by 10 degrees clockwise and increase the number of lost souls that have been saved,.  
+
+		Check its boundaries to see if its out of bounds, if so set it to not alive. 
+
+
+    		virtual void doActivity(GhostRacer* gr);
+
+		- plays the soul goodie sound and sets the score for ghost racer and records the number of souls saved. 
+
+
+    		virtual int getScoreIncrease() const;
+
+		- returns the score
+
+
+    		virtual int getSound() const;
+
+		- plays the correct sound for a soul goodie 
+
+
+    		virtual bool selfDestructs() const;
+
+		- returns true because it is set to not alive after being activated.
+
+
+    		virtual bool isSprayable() const;
+
+		- returns false because it cannot be damaged. 
+
+
+
+In conclusion, I understand that when my code is ran, there will be some faults and will not run perfectly, but I at least got it to compile and run somewhat on my own. 
