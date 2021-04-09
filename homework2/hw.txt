@@ -1,0 +1,45 @@
+Shayan Karmaly
+Professor Nachenberg
+CS 32
+30th January 2020
+
+
+															Homework #2
+	
+	2)
+		The first 12(r,c) coordinates popped off the stack by the algorithm are the following:
+		1. (8,3)
+		2. (7,3)
+		3. (6,3)
+		4. (8,1)
+		5. (7,1)
+		6. (6,1)
+		7. (5,1)
+		8. (1,1)
+		9. (2,1)
+		10. (3,1)
+		11. (4,1)
+		12. (4,2)
+
+
+	4)
+		The first 12(r,c) coordinates popped off the queue by the algorithm are the following:
+		1. (5,4)
+		2. (4,4)
+		3. (4,3)
+		4. (4,2)
+		5. (4,1)
+		6. (5,1)
+		7. (6,1)
+		8. (7,1)
+		9. (8,1)
+		10. (3,1)
+		11. (2,1)
+		12. (1,1)
+
+
+		
+
+	I noticed that the two algorithms differ from each other because the stack follows the first in - last out method popping off the last added position to then check for more coordinates. The queue follows the first in - first out 	method like a conveyor belt which pushes coordinates onto the queue and then pops off the first coordinate that's added onto the queue and checks that coordinate for more discoverable coordinates. That being said, the stack 	algorithm is a "depth" first algorithm meaning it will follow the coordinates in one direction to find a possible solution. The queue algorithm is a "breadth" first algorithm that means it would checks all values around the 	discovered coordinate first for solutions. 
+
+
